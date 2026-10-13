@@ -142,17 +142,6 @@ function in `chart_service.py` and re-deploy.
 
 ---
 
-## Why CHART-IMG instead of Playwright/Chromium
-
-| | Playwright + Chromium | CHART-IMG API |
-|---|---|---|
-| Gets real TradingView chart? | yes (via browser) | yes (via their API) |
-| Chromium on Render free tier? | ~330 MB, fails to build | none |
-| Python deps | playwright, greenlet, ... | httpx only |
-| Build on Render free tier | fails | succeeds |
-| Auth | TradingView session cookies (expire ~30 days) | chart-img.com API key (stable) |
-| Speed | 15-60s (browser startup + render) | 2-10s (HTTP call) |
-
 ---
 
 ## Troubleshooting
@@ -183,11 +172,3 @@ function in `chart_service.py` and re-deploy.
 
 ---
 
-## If you still want the Chromium/Playwright version
-
-It's still in this repo's history and in `capture_and_send.py` (the
-standalone script). The Render web-service path now uses CHART-IMG
-because the free Render tier cannot install Chromium. If you have a
-Render paid plan or a different host that can install Chromium, you
-can switch `chart_service.py` back to the Playwright capture function
-and restore `playwright` to `requirements.txt`.
