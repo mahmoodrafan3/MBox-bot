@@ -41,3 +41,5 @@ services:
         value: XAUUSD · Daily 15m Chart
       - key: TZ
         value: Asia/Kolkata
+      - key: PYTHON_VERSION
+        value: 3.11.10
