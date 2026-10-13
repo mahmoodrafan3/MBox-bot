@@ -200,12 +200,12 @@ def start_scheduler() -> None:
         replace_existing=True,
     )
     scheduler.start()
+    _jt = scheduler.get_job("daily_chart")
+    _nxt = _jt.next_run_time if _jt and _jt.next_run_time else None
     log.info(
         "Scheduler started - next daily capture at 5:49 PM IST "
         "(next fire: %s)",
-        scheduler.get_next_job_times("daily_chart")[0]
-        if scheduler.get_next_job_times("daily_chart")
-        else "unknown",
+        _nxt.isoformat() if _nxt else "unknown",
     )
 
 
@@ -228,7 +228,7 @@ async def root() -> JSONResponse:
             "service": "TradingView Daily Chart -> Telegram",
             "schedule": "5:49 PM IST daily",
             "next_run": (
-                scheduler.get_next_job_times("daily_chart")[0].isoformat()
+                scheduler.get_job("daily_chart").next_run_time.isoformat()
                 if scheduler and scheduler.running
                 else "scheduler not started"
             ),
