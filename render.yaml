@@ -23,9 +23,7 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: sh -c 'exec uvicorn chart_service:app --host 0.0.0.0 --port ${PORT:-10000} --timeout-graceful-shutdown 120'
     envVars:
-      - key: TRADINGVIEW_SESSION_ID
-        sync: false
-      - key: TRADINGVIEW_SESSION_ID_SIGN
+      - key: CHART_IMG_API_KEY
         sync: false
       - key: TELEGRAM_BOT_TOKEN
         sync: false
@@ -41,7 +39,5 @@ services:
         value: XAUUSD · Daily 15m Chart
       - key: TZ
         value: Asia/Kolkata
-      - key: CHART_IMG_API_KEY
-        sync: false
       - key: PYTHON_VERSION
         value: 3.11.10

@@ -101,9 +101,6 @@ Note: `PYTHON_VERSION=3.11.10` is set in `render.yaml` so you don't
 need to add it manually (but if Render defaults to 3.14 for your
 service, add it as a variable too).
 
-The `render.yaml` already declares `CHART_IMG_API_KEY`, `TELEGRAM_*`,
-`SYMBOL`, `INTERVAL`, `THEME`, `CAPTION`, `TZ` as env vars with
-`sync: false` for secrets.
 
 ---
 
