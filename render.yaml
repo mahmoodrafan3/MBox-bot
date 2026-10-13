@@ -20,7 +20,7 @@ services:
     pythonVersion: 3.11.10
     plan: free
     region: frankfurt  # closest free region; adjust if you prefer
-    buildCommand: pip install -r requirements.txt && python -m playwright install chromium
+    buildCommand: pip install -r requirements.txt
     startCommand: sh -c 'exec uvicorn chart_service:app --host 0.0.0.0 --port ${PORT:-10000} --timeout-graceful-shutdown 120'
     envVars:
       - key: TRADINGVIEW_SESSION_ID
