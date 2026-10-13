@@ -1,0 +1,50 @@
+name: TradingView Daily Chart
+
+on:
+  schedule:
+    - cron: "19 12 * * *"
+      timezone: Asia/Kolkata
+  workflow_dispatch:
+
+jobs:
+  screenshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+
+      - name: Install Python deps
+        run: pip install playwright python-dotenv
+
+      - name: Install Chromium
+        run: python -m playwright install chromium
+
+      - name: Run screenshot script
+        env:
+          TRADINGVIEW_SESSION_ID: ${{ secrets.TRADINGVIEW_SESSION_ID }}
+          TRADINGVIEW_SESSION_ID_SIGN: ${{ secrets.TRADINGVIEW_SESSION_ID_SIGN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SYMBOL: ${{ vars.SYMBOL }}          # e.g. MCX:XAUUSD  (set in repo Variables)
+          INTERVAL: ${{ vars.INTERVAL }}      # e.g. 15  (set in repo Variables)
+          THEME: ${{ vars.THEME }}            # dark | light (set in repo Variables)
+          CAPTION: ${{ vars.CAPTION }}        # your text (set in repo Variables)
+        run: python capture_and_send.py
+
+      - name: Upload chart as artifact (for debugging)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: chart-today
+          path: chart.png
+          retention-days: 3
