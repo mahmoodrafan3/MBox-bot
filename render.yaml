@@ -17,6 +17,7 @@ services:
   - type: web
     name: tradingview-daily-chart
     env: python
+    pythonVersion: 3.11.10
     plan: free
     region: frankfurt  # closest free region; adjust if you prefer
     buildCommand: pip install -r requirements.txt && python -m playwright install chromium
