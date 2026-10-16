@@ -188,8 +188,10 @@ def start_scheduler() -> None:
     if scheduler is not None and scheduler.running:
         return
 
-    trigger = CronTrigger(minute=49, hour=17, timezone="Asia/Kolkata")
-    #   └─ edit these three: minute, hour, timezone
+    trigger_minute = int(os.environ.get("CAPTURE_MINUTE", "49"))
+    trigger_hour = int(os.environ.get("CAPTURE_HOUR", "17"))
+    trigger = CronTrigger(minute=trigger_minute, hour=trigger_hour, timezone="Asia/Kolkata")
+    #   Set CAPTURE_MINUTE and CAPTURE_HOUR on Render (or locally) to reschedule.
 
     scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
     scheduler.add_job(
