@@ -189,6 +189,7 @@ def start_scheduler() -> None:
         return
 
     trigger = CronTrigger(minute=49, hour=17, timezone="Asia/Kolkata")
+    #   └─ edit these three: minute, hour, timezone
 
     scheduler = AsyncIOScheduler(timezone="Asia/Kolkata")
     scheduler.add_job(
