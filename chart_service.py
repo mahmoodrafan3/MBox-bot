@@ -29,7 +29,7 @@ from typing import Optional
 import httpx
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from fastapi import FastAPI
+from fastapi import FastAPI, Response
 from fastapi.responses import JSONResponse
 
 logging.basicConfig(
@@ -124,6 +124,32 @@ async def run_daily_capture() -> None:
     if not api_key:
         log.error("CHART_IMG_API_KEY missing - cannot fetch chart")
         return
+
+
+# ---------------------------------------------------------------------------
+# Debug / status helpers (no secrets printed)
+# ---------------------------------------------------------------------------
+
+
+@app.get("/status")
+async def status() -> JSONResponse:
+    """Public status: confirms the service is up, sees the schedule vars,
+    and reports whether the chart API key is loaded.
+
+    IMPORTANT: this endpoint intentionally does NOT return the API key value.
+    It only reports whether the key is present.
+    """
+    return JSONResponse(
+        {
+            "service": "TradingView Daily Chart -> Telegram",
+            "scheduler_running": bool(scheduler and scheduler.running),
+            "capture_minute_env": os.environ.get("CAPTURE_MINUTE", ""),
+            "capture_hour_env": os.environ.get("CAPTURE_HOUR", ""),
+            "chart_api_key_configured": bool(CHART_IMG_API_KEY),
+            "telegram_token_configured": bool(os.environ.get("TELEGRAM_BOT_TOKEN", "")),
+            "telegram_chat_id_configured": bool(os.environ.get("TELEGRAM_CHAT_ID", "")),
+        }
+    )
     if not tg_token or not chat_id:
         log.error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID missing")
         return
